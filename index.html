@@ -599,4 +599,10 @@
                 if (target) {
                     const offset = 80; // Height of fixed header
                     const targetPosition = target.offsetTop - offset;
-                    window.scrollTo
+                                window.scrollTo({
+                                    top: targetPosition,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        });
+                    });
