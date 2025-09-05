@@ -17,6 +17,7 @@
             --bg-light: #f8f8f8;
             --accent: #4a90e2;
             --max-width: 1200px;
+            --header-height: 80px;
         }
 
         body {
@@ -24,6 +25,14 @@
             line-height: 1.6;
             color: var(--primary-color);
             background: white;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
         }
 
         /* Header */
@@ -71,8 +80,8 @@
 
         /* Hero Section */
         .hero {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
+            margin-top: var(--header-height);
+            min-height: calc(100vh - var(--header-height));
             display: flex;
             align-items: center;
             background: var(--bg-light);
@@ -147,6 +156,8 @@
             max-width: var(--max-width);
             margin: 0 auto;
             padding: 5rem 2rem;
+            /* Keep anchor targets visible below fixed header */
+            scroll-margin-top: calc(var(--header-height) + 10px);
         }
 
         section h2 {
