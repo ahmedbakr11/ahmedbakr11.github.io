@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YourName.dev - Cybersecurity Engineer</title>
+    <title>Ahmed Bakr - Cybersecurity Engineer</title>
     <style>
         * {
             margin: 0;
@@ -14,17 +14,44 @@
         :root {
             --primary-color: #1a1a1a;
             --text-light: #666;
-            --bg-light: #f8f8f8;
-            --accent: #4a90e2;
             --max-width: 1200px;
             --header-height: 80px;
+            --timeline-dot-offset-y: 0.35rem;
+            /* theme tokens */
+            --page-bg: #ffffff;
+            --surface: #ffffff;
+            --surface-2: #f7f7f9;
+            --control-bg: #1a1a1a;
+            --chip-bg: #EEEEED;
+            --chip-alt: #f7f7f7;
+            --chip-border: #e2e2e2;
+            --line-muted: var(--line-muted);
+            --overlay-bg: rgba(31,30,30,0.92);
+            --accent: #2e0b5f;
+            --accent-rgb: 46,11,95;
+            --accent-light: rgba(46,11,95,0.12);
+        }
+
+        /* Dark theme overrides */
+        body[data-theme="dark"] {
+            --primary-color: #e9e9ee;
+            --text-light: #b3b3bc;
+            --page-bg: #0f0f12;
+            --surface: #14141a;
+            --surface-2: #0f0f14;
+            --control-bg: #22222a;
+            --chip-bg: #1b1b22;
+            --chip-alt: #202029;
+            --chip-border: #2a2a33;
+            --line-muted: #2a2a33;
+            --overlay-bg: rgba(0,0,0,0.85);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             line-height: 1.6;
             color: var(--primary-color);
-            background: white;
+            background: var(--page-bg);
         }
 
         html {
@@ -40,7 +67,7 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: white;
+            background: var(--surface);
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             z-index: 1000;
         }
@@ -48,30 +75,55 @@
         nav {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 2rem 1.25rem 1rem; /* nudge content left */
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
             color: var(--primary-color);
             text-decoration: none;
+            margin-left: -0.25rem; /* slight left shift */
         }
 
         .nav-links {
             display: flex;
-            gap: 2.5rem;
+            gap: 2rem; /* slightly tighter */
             list-style: none;
         }
+
+        .theme-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            margin-left: 1rem;
+            border-radius: 999px;
+            border: 1px solid var(--chip-border);
+            background: var(--surface-2);
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+        }
+        .theme-toggle:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+        .theme-toggle svg { width: 18px; height: 18px; display: block; }
+        .icon-sun { display: inline; }
+        .icon-moon { display: none; }
+        body[data-theme="dark"] .icon-sun { display: none; }
+        body[data-theme="dark"] .icon-moon { display: inline; }
 
         .nav-links a {
             color: var(--primary-color);
             text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s ease;
+            font-size: 1rem;
+            letter-spacing: 0.2px;
+            font-weight: 500;
+            transition: color 0.25s ease;
         }
 
         .nav-links a:hover {
@@ -84,7 +136,7 @@
             min-height: calc(100vh - var(--header-height));
             display: flex;
             align-items: center;
-            background: var(--bg-light);
+            background: var(--surface-2);
         }
 
         .hero-container {
@@ -116,8 +168,10 @@
 
         .social-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             margin-top: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .social-links a {
@@ -127,7 +181,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--primary-color);
+            background: var(--control-bg);
             color: white;
             text-decoration: none;
             transition: transform 0.3s ease, background 0.3s ease;
@@ -138,17 +192,68 @@
             background: var(--accent);
         }
 
+        /* Inline SVG icon sizing for emoji replacements */
+        .emoji-icon {
+            width: 1.1em;
+            height: 1.1em;
+            vertical-align: -0.15em;
+            margin-left: 0.25em;
+            display: inline-block;
+        }
+        .emoji-icon.pin { width: 1em; height: 1em; }
+
+        /* Hero CTA pill aligned with social icons */
+        .social-links .pill.cta {
+            height: 40px;
+            min-width: 240px; /* ensure text fits */
+            padding: 0 18px;
+            border-radius: 999px;
+            background-color: var(--chip-bg);
+            flex: 0 0 auto;
+        }
+        .social-links .pill.cta .pill-label {
+            background-color: #1F1E1E;
+            padding: 0 16px;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        .social-links .pill.cta .pill-items {
+            justify-content: center;
+            width: 100%;
+        }
+        .social-links .pill.cta .pill-items { display: none; }
+        /* CTA: no sliding; simple color shift on hover */
+        .pill.cta .pill-label { transform: none !important; color: #eee; }
+        .pill.cta:hover { background-color: var(--chip-alt); }
+        .pill.cta:hover .pill-label { background-color: var(--accent); color: #fff; }
+        .pill.cta::before, .pill.cta::after { display: none; }
+
+        /* Removed legacy .cta-wrap and generic .pill.cta sizing */
+
         .hero-image {
             position: relative;
+            isolation: isolate; /* ensure pseudo ring stacks cleanly */
         }
 
         .hero-image img {
             width: 280px;
             height: 280px;
-            border-radius: 50%;
+            /* Irregular, animated frame that belongs to the image element */
+            border-radius: 30% 42% 52% 48% / 47% 53% 55% 45%;
             object-fit: cover;
-            border: 5px solid white;
+            border: 3px solid #000; /* bold black outline as part of the image */
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            /* Smooth wobble without rotating or translating the photo */
+            animation: wobble-mask 20s cubic-bezier(.22,.8,.2,1) infinite;
+        }
+
+        @keyframes wobble-mask {
+            0%   { border-radius: 58% 42% 52% 48% / 47% 53% 55% 45%; }
+            20%  { border-radius: 62% 38% 55% 45% / 50% 50% 46% 54%; }
+            40%  { border-radius: 55% 45% 60% 40% / 44% 56% 52% 48%; }
+            60%  { border-radius: 50% 50% 54% 46% / 58% 42% 45% 55%; }
+            80%  { border-radius: 57% 43% 48% 52% / 46% 54% 60% 40%; }
+            100% { border-radius: 58% 42% 52% 48% / 47% 53% 55% 45%; }
         }
 
         /* Sections */
@@ -175,31 +280,25 @@
         /* About Section */
         .about-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 4rem;
             align-items: start;
         }
 
         .about-text {
             color: var(--text-light);
             line-height: 1.8;
+            max-width: 68ch;
         }
 
-        .skills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-top: 1.5rem;
-        }
-
-        .skill-tag {
-            background: var(--bg-light);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
+        .about-skills h3 {
+            margin: 0 0 0.75rem 0;
             color: var(--primary-color);
-            border: 1px solid #e0e0e0;
         }
+
+        /* (cleaned) removed legacy flat skills tags */
+
+        /* (cleaned) removed legacy expandable skill groups */
 
         /* Projects Section */
         #projects {
@@ -213,7 +312,7 @@
         }
 
         .project-card {
-            background: white;
+            background: var(--surface);
             border-radius: 10px;
             padding: 2rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
@@ -229,6 +328,204 @@
             margin-bottom: 1rem;
             color: var(--primary-color);
         }
+
+        /* Skills Pills (sample-like) */
+        .skill-pills {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(260px, 1fr));
+            justify-items: start;
+            align-content: start;
+            gap: 1rem 1.25rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 980px) {
+            .about-content { grid-template-columns: 1fr; gap: 2rem; }
+            .skill-pills { grid-template-columns: 1fr; }
+        }
+
+        .pill {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            height: 64px;
+            background-color: var(--chip-bg);
+            border-radius: 80px;
+            padding: 0 18px;
+            cursor: pointer;
+            overflow: hidden;
+            will-change: transform, box-shadow;
+            transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+            touch-action: pan-y; /* allow vertical scroll; we handle horizontal */
+        }
+
+        .pill:hover {
+            transform: scale(1.04);
+            box-shadow: 0 10px 22px rgba(0,0,0,0.09);
+            background-color: #F2F2F2;
+        }
+
+        .pill-label {
+            position: absolute;
+            z-index: 2;
+            inset: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 80px;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            color: #EEEEED;
+            background-color: #1F1E1E;
+            transition: transform 900ms ease;
+            padding: 0 22px;
+        }
+
+        .pill:hover .pill-label,
+        .pill.open .pill-label {
+            transform: translateX(-120%);
+        }
+
+        /* Vertical slide variant (Contact buttons) */
+        .pill.vertical .pill-label { transform: translateY(0); }
+        .pill.vertical:hover .pill-label,
+        .pill.vertical.open .pill-label { transform: translateY(-120%); }
+
+        .pill-items {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            gap: 0.5rem;
+            padding: 0 6px;
+            white-space: nowrap;
+            overflow: hidden; /* cropped view; JS will scroll */
+            scrollbar-width: none; /* Firefox */
+        }
+
+        .pill-items::-webkit-scrollbar { display: none; }
+
+        .pill-items span {
+            opacity: 0;
+            transform: scale(0.1);
+            color: #1F1E1E;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            background: var(--surface);
+            border: 1px solid var(--chip-border);
+            border-radius: 999px;
+            padding: 0.35rem 0.7rem;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+            will-change: transform, opacity;
+            transition: opacity 350ms ease, transform 350ms ease;
+        }
+
+        .pill:hover .pill-items span,
+        .pill.open .pill-items span {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .pill.vertical:hover .pill-items span,
+        .pill.vertical.open .pill-items span { opacity: 1; transform: scale(1); }
+
+        /* Staggered reveal */
+        .pill-items span:nth-child(1) { transition-delay: .10s; }
+        .pill-items span:nth-child(2) { transition-delay: .20s; }
+        .pill-items span:nth-child(3) { transition-delay: .30s; }
+        .pill-items span:nth-child(4) { transition-delay: .40s; }
+        .pill-items span:nth-child(5) { transition-delay: .50s; }
+        .pill-items span:nth-child(6) { transition-delay: .60s; }
+
+        /* Alternate sub-pill contrast */
+        .pill-items span:nth-child(even) {
+            background: var(--chip-alt);
+            border-color: var(--chip-border);
+        }
+
+        /* Icons in pill labels */
+        .pill-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Edge fades to hint horizontal scroll when hovered */
+        .pill::before,
+        .pill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 28px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 180ms ease;
+            z-index: 1; /* above items, below label */
+        }
+        .pill:hover::before,
+        .pill:hover::after,
+        .pill.open::before,
+        .pill.open::after { opacity: 1; }
+        /* Vertical fades for contact pills */
+        .pill.vertical::before, 
+        .pill.vertical::after { left: 0; right: 0; width: 100%; height: 18px; }
+        .pill.vertical::before { top: 0; background: linear-gradient(to bottom, var(--chip-bg), rgba(0,0,0,0)); }
+        .pill.vertical::after  { bottom: 0; background: linear-gradient(to top,    var(--chip-bg), rgba(0,0,0,0)); }
+
+        /* Action pills grid in Contact */
+        .action-pills {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(260px, 1fr));
+            gap: 1rem 1.25rem;
+            justify-items: start;
+            margin-top: 1.25rem;
+        }
+        @media (max-width: 640px) { .action-pills { grid-template-columns: 1fr; } }
+        .action-pills .pill { height: 64px; }
+        .action-pills .pill .pill-items { justify-content: center; }
+        .action-pills .pill .pill-items span { font-weight: 600; background: transparent; border: none; box-shadow: none; padding: 0; text-decoration: none; }
+        .action-pills a { text-decoration: none; }
+        .action-pills .pill .pill-items span:nth-child(even) { background: transparent; border: none; }
+        .action-pills .pill .pill-label { padding: 0 18px; }
+        .action-pills .pill .pill-icon { margin-right: 0; }
+        .action-btn { border: 0; background: transparent; padding: 0; }
+        .action-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 80px; }
+
+        /* Copy toast */
+        .copy-toast {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(31,30,30,0.92);
+            color: #eee;
+            border-radius: inherit;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            transform: scale(0.98);
+            pointer-events: none;
+            transition: opacity 200ms ease, transform 200ms ease;
+        }
+        .pill.copied .copy-toast { opacity: 1; transform: scale(1); }
+        .pill.copied::before, .pill.copied::after { display: none; }
+        /* Ensure overlay cleanly sits over content */
+        .pill.copied .pill-label,
+        .pill.copied .pill-items { opacity: 0; }
+        .pill::before { left: 0; background: linear-gradient(to right, #EEEEED, rgba(238,238,237,0)); }
+        .pill::after  { right: 0; background: linear-gradient(to left,  #EEEEED, rgba(238,238,237,0)); }
 
         .project-card p {
             color: var(--text-light);
@@ -263,7 +560,7 @@
             top: 0;
             height: 100%;
             width: 2px;
-            background: #e0e0e0;
+            background: var(--line-muted);
         }
 
         .experience-item {
@@ -275,14 +572,42 @@
         .experience-item::before {
             content: '';
             position: absolute;
-            left: -2rem;
-            top: 0;
+            /* center the dot on the vertical line (2rem inset).
+               12px dot + 2px border each side => 16px total, half = 8px */
+            left: calc(-2rem - 8px);
+            top: var(--timeline-dot-offset-y);
             width: 12px;
             height: 12px;
             border-radius: 50%;
             background: var(--accent);
             border: 2px solid white;
-            box-shadow: 0 0 0 2px #e0e0e0;
+            box-shadow: 0 0 0 2px var(--line-muted);
+            transform-origin: center;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        /* outward pulse ring */
+        .experience-item::after {
+            content: '';
+            position: absolute;
+            /* align pulse ring center with the dot center (dot is 16px incl. border, ring base is 12px) */
+            left: calc(-2rem - 6px);
+            top: calc(var(--timeline-dot-offset-y) + 2px);
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse-ring 2s ease-out infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
+
+        @keyframes pulse-ring {
+            0% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.45); }
+            70% { box-shadow: 0 0 0 10px rgba(74, 144, 226, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 144, 226, 0); }
         }
 
         .experience-item h3 {
@@ -364,7 +689,7 @@
                 top: 100%;
                 left: 0;
                 width: 100%;
-                background: white;
+                background: var(--surface);
                 flex-direction: column;
                 padding: 2rem;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.1);
@@ -411,7 +736,7 @@
     <!-- Header -->
     <header>
         <nav>
-            <a href="#" class="logo">YourName.dev</a>
+            <a href="#" class="logo">Ahmed Bakr</a>
             <button class="mobile-menu-toggle" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
@@ -424,31 +749,50 @@
                 <li><a href="#experience">Experience</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-        </nav>
+                    <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+                <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                </svg>
+                <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button></nav>
     </header>
 
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <h1>Cybersecurity Engineer 🔐</h1>
+                <h1>Cybersecurity Engineer <img src="waving-hand-skin-2-svgrepo-com.svg" alt="waving hand" class="emoji-icon" /></h1>
                 <p class="subtitle">
-                    Hi, I'm [Your Name]. A passionate Cybersecurity Engineer specialized in network security, penetration testing, and security architecture. Based in [Your Location] 📍
+                    Hi, I'm <strong>Ahmed Bakr</strong>. A passionate Cybersecurity Engineer specialized in system security, threat detection and response. Based in Cairo, Egypt <img src="round-pushpin-svgrepo-com.svg" alt="location pin" class="emoji-icon pin" />
                 </p>
                 <div class="social-links">
-                    <a href="https://linkedin.com" target="_blank" title="LinkedIn">
+                    <a href="https://www.linkedin.com/in/ahmed1bakr" target="_blank" title="LinkedIn">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                     </a>
-                    <a href="https://github.com" target="_blank" title="GitHub">
+                    <a href="https://github.com/ahmedbakr11" target="_blank" title="GitHub">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
                     </a>
-                    <a href="https://twitter.com" target="_blank" title="Twitter">
-                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
-                    </a>
+
+                                    <a class="pill cta" href="#contact">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M5 12h14"/>
+                                <path d="M13 5l7 7-7 7"/>
+                            </svg>
+                            Contact Me
+                        </span>
+                        <div class="pill-items" aria-hidden="true">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M22 16.92v2a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 1h2a2 2 0 0 1 2 1.72c.12.86.31 1.7.57 2.5a2 2 0 0 1-.45 2.11L7 8a16 16 0 0 0 6 6l.67-1.23a2 2 0 0 1 2.11-.45c.8.26 1.64.45 2.5.57A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </div>
+                    </a></div>
                 </div>
-            </div>
             <div class="hero-image">
-                <img src="https://via.placeholder.com/280x280/1a1a1a/ffffff?text=Your+Photo" alt="Profile Photo">
+                <img src="C:\Users\bakra\Documents\Portfolio\IMG-20241110-WA0006.jpg" alt="Profile Photo">
             </div>
         </div>
     </section>
@@ -456,31 +800,144 @@
     <!-- About Section -->
     <section id="about">
         <h2>About Me</h2>
-        <p class="section-subtitle">Get to know me better</p>
+       
         <div class="about-content">
             <div>
                 <p class="about-text">
-                    I'm a dedicated Cybersecurity Engineer with over [X] years of experience in protecting organizations from cyber threats. My expertise spans across network security, vulnerability assessment, incident response, and security architecture design.
+                    I’m a dedicated Cybersecurity Engineer with over a year of hands-on experience in hardening, protecting, and monitoring systems and data against evolving threats. My mission is simple: safeguarding sensitive information.
                 </p>
                 <p class="about-text" style="margin-top: 1rem;">
-                    I'm passionate about staying ahead of emerging threats and helping organizations build robust security postures. When I'm not hunting for vulnerabilities or designing secure systems, you can find me contributing to open-source security tools or sharing knowledge through security writeups.
+                    My journey began with my very first ‘incident’—hijacking my neighbor’s Wi-Fi 😅. That moment sparked my fascination with systems and cybersecurity, and I’ve never looked back.
+                </p>
+                <p class="about-text" style="margin-top: 1rem;">
+                    I thrive in fast-paced environments, adapting quickly to new technologies and emerging threats. Whether it’s identifying vulnerabilities, implementing robust security measures, or responding to incidents, I bring a reliable, detail-oriented, and results-driven approach to every challenge.
                 </p>
             </div>
-            <div>
+            <div class="about-skills">
                 <h3 style="margin-bottom: 1rem;">Technical Skills</h3>
-                <div class="skills">
-                    <span class="skill-tag">Penetration Testing</span>
-                    <span class="skill-tag">Network Security</span>
-                    <span class="skill-tag">SIEM</span>
-                    <span class="skill-tag">Python</span>
-                    <span class="skill-tag">Bash Scripting</span>
-                    <span class="skill-tag">Incident Response</span>
-                    <span class="skill-tag">Cloud Security</span>
-                    <span class="skill-tag">Malware Analysis</span>
-                    <span class="skill-tag">Burp Suite</span>
-                    <span class="skill-tag">Metasploit</span>
-                    <span class="skill-tag">Wireshark</span>
-                    <span class="skill-tag">Docker Security</span>
+                <div class="skill-pills">
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="6" cy="6" r="3"/>
+                                <circle cx="18" cy="6" r="3"/>
+                                <circle cx="12" cy="18" r="3"/>
+                                <line x1="8.5" y1="7.5" x2="15.5" y2="7.5"/>
+                                <line x1="7.5" y1="8.5" x2="10.5" y2="15.5"/>
+                                <line x1="16.5" y1="8.5" x2="13.5" y2="15.5"/>
+                            </svg>
+                            Network Access Control
+                        </span>
+                        <div class="pill-items">
+                            <span>Cisco ISE</span>
+                            <span>FortiNAC</span>
+                            <span>iMaster NCE-Campus</span>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z"/>
+                            </svg>
+                            EndPoint Protection
+                        </span>
+                        <div class="pill-items">
+                            <span>Defender for Endpoint</span>
+                            <span>CrowdStrike</span>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="3" y="6" width="18" height="12" rx="2" ry="2"/>
+                                <path d="M3 8l9 6 9-6"/>
+                            </svg>
+                            Secure Mail Gateway
+                        </span>
+                        <div class="pill-items">
+                            <span>Proofpoint</span>
+                            <span>MDO (M365)</span>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M7 3h7l5 5v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/>
+                                <path d="M14 3v5h5"/>
+                                <rect x="9" y="12" width="6" height="5" rx="1"/>
+                                <path d="M10 12v-1a2 2 0 0 1 4 0v1"/>
+                            </svg>
+                            Data Loss Prevention
+                        </span>
+                        <div class="pill-items">
+                            <span>Purview DLP</span>
+                            <span>Forcepoint DLP</span>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <rect x="5" y="11" width="3" height="7"/>
+                                <rect x="10.5" y="8" width="3" height="10"/>
+                                <rect x="16" y="5" width="3" height="13"/>
+                            </svg>
+                            SIEM
+                        </span>
+                        <div class="pill-items">
+                            <span>Splunk</span>
+                            <span>Microsoft Sentinel</span>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <polygon points="12,3 17,6 17,12 12,15 7,12 7,6"/>
+                                <circle cx="12" cy="9" r="2.5"/>
+                            </svg>
+                            SOAR
+                        </span>
+                        <div class="pill-items">
+                            <span>Cortex XSOAR</span>
+                            <span>FortiSOAR</span>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="7"/>
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                            Frameworks &amp; Compliances
+                        </span>
+                        <div class="pill-items">
+                            <span>ISO 27001</span>
+                            <span>NIST CSF</span>
+                            <span>PCI DSS</span>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="pill-label">
+                            <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 8l-4 4 4 4"/>
+                                <path d="M16 8l4 4-4 4"/>
+                                <path d="M12 8v8"/>
+                            </svg>
+                            Tech Stack
+                        </span>
+                        <div class="pill-items">
+                            <span>Python</span>
+                            <span>C++</span>
+                            <span>Full Stack</span>
+                            <span>Git &amp; GitHub</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -490,46 +947,7 @@
     <section id="projects">
         <h2>Projects</h2>
         <p class="section-subtitle">Some of my recent security projects and tools</p>
-        <div class="projects-grid">
-            <div class="project-card">
-                <h3>🛡️ Network Security Scanner</h3>
-                <p>Automated vulnerability scanner built with Python that identifies common network misconfigurations and security issues. Features include port scanning, service detection, and CVE checking.</p>
-                <div class="project-links">
-                    <a href="#" target="_blank">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        GitHub
-                    </a>
-                    <a href="#" target="_blank">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                        Documentation
-                    </a>
-                </div>
-            </div>
-            <div class="project-card">
-                <h3>🔍 Log Analysis Tool</h3>
-                <p>Real-time log analysis and threat detection system that processes multiple log formats, correlates events, and generates security alerts using machine learning algorithms.</p>
-                <div class="project-links">
-                    <a href="#" target="_blank">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        GitHub
-                    </a>
-                    <a href="#" target="_blank">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
-                        Live Demo
-                    </a>
-                </div>
-            </div>
-            <div class="project-card">
-                <h3>🔐 Secure API Gateway</h3>
-                <p>Implementation of a secure API gateway with rate limiting, authentication, JWT validation, and DDoS protection. Built using Node.js and integrated with cloud WAF services.</p>
-                <div class="project-links">
-                    <a href="#" target="_blank">
-                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                        GitHub
-                    </a>
-                </div>
-            </div>
-        </div>
+        
     </section>
 
     <!-- Experience Section -->
@@ -538,34 +956,44 @@
         <p class="section-subtitle">My professional journey in cybersecurity</p>
         <div class="experience-timeline">
             <div class="experience-item">
-                <h3>Senior Cybersecurity Engineer</h3>
-                <p class="experience-date">Company Name | 2022 - Present</p>
+                <h3>Enterprise Security Intern</h3>
+                <p class="experience-date"><strong>e& Egypt</strong></p>
                 <ul>
-                    <li>Lead security assessments and penetration testing for enterprise applications</li>
-                    <li>Design and implement security architecture for cloud infrastructure</li>
-                    <li>Manage incident response team and coordinate threat mitigation strategies</li>
-                    <li>Developed automated security tools that reduced vulnerability detection time by 60%</li>
+                    <li>Shadowed system security and SOC engineers in day-to-day activities</li>
+                    <li>Implemented and Configured Kaspersky EPP Security Center on Linux and Windows Servers</li>
+                    <li>Configured filtering policy groups in Symantec SMG </li>
+                    <li>Exposure to SOC monitoring and incidence response</li>
                 </ul>
             </div>
             <div class="experience-item">
-                <h3>Security Analyst</h3>
-                <p class="experience-date">Previous Company | 2020 - 2022</p>
+                <h3>Incidence Response Trainee</h3>
+                <p class="experience-date"><strong>DEPI - Digital Egyptian Pioneers Intiative</strong></p>
                 <ul>
-                    <li>Monitored and analyzed security events using SIEM platforms</li>
-                    <li>Conducted vulnerability assessments and security audits</li>
-                    <li>Implemented security controls and policies across the organization</li>
-                    <li>Responded to security incidents and performed forensic analysis</li>
+                    <li>Aligning security measures with business objectives</li>
+                    <li>Security baselining for organizations</li>
+                    <li>System hardening and configuration</li>
+                    <li>Security Vulnerability analysis</li>
                 </ul>
             </div>
             <div class="experience-item">
-                <h3>Junior Security Engineer</h3>
-                <p class="experience-date">Another Company | 2018 - 2020</p>
+                <h3>Cybersecurity Trainee</h3>
+                <p class="experience-date"><strong>ITI - Information Technology Institute</strong></p>
                 <ul>
-                    <li>Assisted in penetration testing and vulnerability assessments</li>
-                    <li>Maintained firewall rules and security configurations</li>
-                    <li>Created security documentation and training materials</li>
-                    <li>Participated in security awareness programs</li>
+                    <li>Earned Proficiency in configuring and managing complex network infrastructures and robust security measures.</li>
+                    <li>Developed strong understanding of methodologies and strategies for cybersecurity.</li>
+                    <li>Acquired foundational knowledge across diverse Huawei ICT domains, including Datacom, AI, and Cloud Computing.</li>
                 </ul>
+                
+            </div>
+            <div class="experience-item">
+                <h3>Network Engineer Intern</h3>
+                <p class="experience-date"><strong>Telecom Egypt We</strong></p>
+                <ul>
+                    <li>Assisted in configuring and managing network devices based on CCNA standards.</li>
+                    <li>Gained hands-on experience in network troubleshooting and infrastructure design.</li>
+                    <li>Strengthened knowledge of routing, switching, and cloud networking concepts.</li>
+                </ul>
+                
             </div>
         </div>
     </section>
@@ -573,24 +1001,64 @@
     <!-- Contact Section -->
     <section id="contact">
         <h2>Contact Me</h2>
-        <p class="section-subtitle">Let's discuss how I can help secure your organization</p>
+        <p class="section-subtitle">Sounds like the perfect deal you've been looking for? Look no further,  contact me, and let's get started!</p>
         <div class="contact-content">
             <p style="color: var(--text-light); margin-bottom: 2rem;">
-                I'm always interested in new cybersecurity challenges and opportunities. Whether you need help with security assessments, incident response, or building secure systems, feel free to reach out.
+                
             </p>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <strong>Email</strong>
-                    <a href="mailto:your.email@example.com">your.email@example.com</a>
-                </div>
-                <div class="contact-item">
-                    <strong>LinkedIn</strong>
-                    <a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a>
-                </div>
-                <div class="contact-item">
-                    <strong>GitHub</strong>
-                    <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a>
-                </div>
+            <div class="action-pills">
+                <!-- Email (copies to clipboard) -->
+                <button class="pill vertical action-btn" id="pillEmail" aria-label="Copy email address">
+                    <span class="pill-label">
+                        <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="3" y="6" width="18" height="12" rx="2" ry="2"/>
+                            <path d="M3 8l9 6 9-6"/>
+                        </svg>
+                    </span>
+                    <div class="pill-items">
+                        <span id="emailText">bakr.ahmedd11@gmail.com</span>
+                    </div>
+                    <span class="copy-toast">Copied!</span>
+                </button>
+
+                <!-- Phone (copies to clipboard) -->
+                <button class="pill vertical action-btn" id="pillPhone" aria-label="Copy phone number">
+                    <span class="pill-label">
+                        <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M22 16.92v2a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 1h2a2 2 0 0 1 2 1.72c.12.86.31 1.7.57 2.5a2 2 0 0 1-.45 2.11L7 8a16 16 0 0 0 6 6l.67-1.23a2 2 0 0 1 2.11-.45c.8.26 1.64.45 2.5.57A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </span>
+                    <div class="pill-items">
+                        <span id="phoneText">+20 110 33 5060</span>
+                    </div>
+                    <span class="copy-toast">Copied!</span>
+                </button>
+
+                <!-- GitHub (redirects) -->
+                <a class="pill vertical action-btn" id="pillGitHub" href="https://github.com/ahmedbakr11" target="_blank" rel="noopener" aria-label="Open GitHub profile">
+                    <span class="pill-label">
+                        <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.68c-2.78.6-3.37-1.17-3.37-1.17-.45-1.14-1.1-1.44-1.1-1.44-.9-.61.07-.6.07-.6 1 .07 1.54 1.05 1.54 1.05.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.64-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.9-1.29 2.74-1.02 2.74-1.02.56 1.37.21 2.39.1 2.64.64.7 1.02 1.59 1.02 2.68 0 3.84-2.33 4.69-4.55 4.94.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/>
+                        </svg>
+                    </span>
+                    <div class="pill-items">
+                        <span>@ahmedbakr11</span>
+                    </div>
+                </a>
+
+                <!-- LinkedIn (redirects) -->
+                <a class="pill vertical action-btn" id="pillLinkedIn" href="https://www.linkedin.com/in/ahmed1bakr" target="_blank" rel="noopener" aria-label="Open LinkedIn profile">
+                    <span class="pill-label">
+                        <svg class="pill-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
+                            <rect x="3" y="8" width="3" height="13" rx="1"/>
+                            <path d="M10 8h3v2.5C14 9.1 15.4 8 17.5 8 20 8 21 9.5 21 12.3V21h-3v-7c0-1.7-.6-2.7-2-2.7-1.1 0-2 .7-2.3 1.6-.1.3-.2.8-.2 1.3V21h-3V8z"/>
+                        </svg>
+                    </span>
+                    <div class="pill-items">
+                        <span>/in/ahmed1bakr</span>
+                    </div>
+                </a>
             </div>
         </div>
     </section>
@@ -610,10 +1078,121 @@
                 if (target) {
                     const offset = 80; // Height of fixed header
                     const targetPosition = target.offsetTop - offset;
-                                window.scrollTo({
-                                    top: targetPosition,
-                                    behavior: 'smooth'
-                                });
-                            }
-                        });
-                    });
+                    window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                }
+            });
+        });
+        // Theme toggle
+        (function(){
+            const btn = document.getElementById('themeToggle');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const saved = localStorage.getItem('theme');
+            const initial = saved || (prefersDark ? 'dark' : 'light');
+            if (initial === 'dark') document.body.setAttribute('data-theme','dark');
+            btn?.addEventListener('click', ()=>{
+                const isDark = document.body.getAttribute('data-theme') === 'dark';
+                const next = isDark ? 'light' : 'dark';
+                document.body.setAttribute('data-theme', next === 'dark' ? 'dark' : '');
+                if (next === 'dark') document.body.setAttribute('data-theme','dark'); else document.body.removeAttribute('data-theme');
+                localStorage.setItem('theme', next);
+            });
+        })();
+    </script>
+
+    <script>
+    // Mouse-driven horizontal scroll for skill pills
+    (function(){
+      function setup(pill){
+        const items = pill.querySelector('.pill-items');
+        if(!items) return;
+        let raf = null;
+        let dragging = false, startX = 0, startScroll = 0;
+        function moveTo(clientX){
+          const rect = items.getBoundingClientRect();
+          const x = Math.min(Math.max(clientX - rect.left, 0), rect.width);
+          const progress = rect.width ? (x / rect.width) : 0;
+          const maxScroll = Math.max(0, items.scrollWidth - items.clientWidth);
+          items.scrollLeft = maxScroll * progress;
+        }
+        function onMove(e){ cancelAnimationFrame(raf); raf = requestAnimationFrame(()=> moveTo(e.clientX)); }
+        function onEnter(e){ onMove(e); }
+        function onWheel(e){ const delta = (e.deltaX||0) + (e.deltaY||0); if (delta!==0){ items.scrollLeft += delta; e.preventDefault(); } }
+        // Touch drag support
+        function onTouchStart(e){
+          const t = e.touches && e.touches[0];
+          if(!t) return;
+          pill.classList.add('open');
+          dragging = true; startX = t.clientX; startScroll = items.scrollLeft;
+        }
+        function onTouchMove(e){
+          if(!dragging) return;
+          const t = e.touches && e.touches[0]; if(!t) return;
+          const dx = startX - t.clientX;
+          if (Math.abs(dx) > 2) e.preventDefault(); // prevent page scroll when dragging horizontally
+          items.scrollLeft = startScroll + dx;
+        }
+        function onTouchEnd(){ dragging = false; pill.classList.remove('open'); }
+
+        pill.addEventListener('mousemove', onMove);
+        pill.addEventListener('mouseenter', onEnter);
+        pill.addEventListener('wheel', onWheel, { passive: false });
+        pill.addEventListener('mouseleave', ()=>{ items.scrollLeft = 0; });
+        pill.addEventListener('touchstart', onTouchStart, { passive: true });
+        pill.addEventListener('touchmove', onTouchMove, { passive: false });
+        pill.addEventListener('touchend', onTouchEnd);
+        pill.addEventListener('touchcancel', onTouchEnd);
+      }
+      function init(){ document.querySelectorAll('.pill').forEach(setup); }
+      if (document.readyState !== 'loading') init(); else document.addEventListener('DOMContentLoaded', init);
+    })();
+    </script>
+
+    <script>
+    // Contact action pills: copy to clipboard and touch open behavior
+    (function(){
+      function copyToClipboard(text){
+        try { return navigator.clipboard.writeText(text); } catch(e) { return Promise.reject(e); }
+      }
+      function setupCopy(pill, text){
+        if(!pill) return;
+        const toast = pill.querySelector('.copy-toast');
+        function showToast(){
+          pill.classList.add('copied');
+          setTimeout(()=> pill.classList.remove('copied'), 1000);
+        }
+        pill.addEventListener('click', (e)=>{
+          e.preventDefault();
+          copyToClipboard(text).then(showToast).catch(showToast);
+        });
+        // Touch: open on touchstart to reveal content
+        pill.addEventListener('touchstart', ()=> pill.classList.add('open'), { passive: true });
+        pill.addEventListener('touchend',   ()=> pill.classList.remove('open'));
+        pill.addEventListener('touchcancel',()=> pill.classList.remove('open'));
+      }
+      function init(){
+        const emailEl = document.getElementById('pillEmail');
+        const phoneEl = document.getElementById('pillPhone');
+        const emailTxt = document.getElementById('emailText')?.textContent?.trim() || '';
+        const phoneTxt = document.getElementById('phoneText')?.textContent?.trim() || '';
+        setupCopy(emailEl, emailTxt);
+        setupCopy(phoneEl, phoneTxt);
+        // Also allow hover to open on desktop
+        document.querySelectorAll('.pill.vertical').forEach(p=>{
+          p.addEventListener('mouseenter', ()=> p.classList.add('open'));
+          p.addEventListener('mouseleave', ()=> p.classList.remove('open'));
+        });
+      }
+      if (document.readyState !== 'loading') init(); else document.addEventListener('DOMContentLoaded', init);
+    })();
+    </script>
+
+    </body>
+    </html>
+
+
+
+
+
+
+
+
