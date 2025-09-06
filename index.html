@@ -111,11 +111,11 @@
             transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
         }
         .theme-toggle:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
-        .theme-toggle svg { width: 18px; height: 18px; display: block; }
-        .icon-sun { display: inline; }
-        .icon-moon { display: none; }
-        body[data-theme="dark"] .icon-sun { display: none; }
-        body[data-theme="dark"] .icon-moon { display: inline; }
+        .theme-toggle svg { width: 18px; height: 18px; }
+        .theme-toggle .icon-sun { display: inline-block; }
+        .theme-toggle .icon-moon { display: none; }
+        body[data-theme="dark"] .theme-toggle .icon-sun { display: none; }
+        body[data-theme="dark"] .theme-toggle .icon-moon { display: inline-block; }
 
         .nav-links a {
             color: var(--primary-color);
@@ -414,7 +414,7 @@
         .pill-items span {
             opacity: 0;
             transform: scale(0.1);
-            color: #1F1E1E;
+            color: var(--primary-color);
             font-size: 0.9rem;
             white-space: nowrap;
             background: var(--surface);
@@ -446,6 +446,18 @@
         .pill-items span:nth-child(even) {
             background: var(--chip-alt);
             border-color: var(--chip-border);
+        }
+
+        /* Dark mode visibility for skills sub-pills */
+        body[data-theme="dark"] .skill-pills .pill .pill-items span {
+            background: #1c1c24;           /* subtle lift from page bg */
+            border-color: #2a2a33;         /* readable edge */
+            color: var(--primary-color);   /* light text in dark */
+            box-shadow: 0 1px 0 rgba(0,0,0,0.4);
+        }
+        body[data-theme="dark"] .skill-pills .pill .pill-items span:nth-child(even) {
+            background: #23232e;           /* slight alternation */
+            border-color: #34343f;
         }
 
         /* Icons in pill labels */
