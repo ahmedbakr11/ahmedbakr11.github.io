@@ -25,7 +25,7 @@
             --chip-bg: #EEEEED;
             --chip-alt: #f7f7f7;
             --chip-border: #e2e2e2;
-            --line-muted: var(--line-muted);
+            --line-muted: #e2e2e2; /* light theme timeline/lines */
             --overlay-bg: rgba(31,30,30,0.92);
             --accent: #2e0b5f;
             --accent-rgb: 46,11,95;
@@ -75,10 +75,11 @@
         nav {
             max-width: var(--max-width);
             margin: 0 auto;
-            padding: 1.25rem 2rem 1.25rem 1rem; /* nudge content left */
-            display: flex;
-            justify-content: space-between;
+            padding: 1.25rem 2rem; /* symmetric padding for true centering */
+            display: grid;
+            grid-template-columns: 1fr auto 1fr; /* left / centered / right */
             align-items: center;
+            position: relative;
         }
 
         .logo {
@@ -87,13 +88,16 @@
             letter-spacing: 0.2px;
             color: var(--primary-color);
             text-decoration: none;
-            margin-left: -0.25rem; /* slight left shift */
+            justify-self: start; /* left side */
+            grid-column: 1;
         }
 
         .nav-links {
             display: flex;
             gap: 2rem; /* slightly tighter */
             list-style: none;
+            grid-column: 2;
+            justify-self: center; /* perfectly centered within header */
         }
 
         .theme-toggle {
@@ -109,6 +113,8 @@
             color: var(--primary-color);
             cursor: pointer;
             transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+            grid-column: 3;
+            justify-self: end; /* right side */
         }
         .theme-toggle:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
         .theme-toggle svg { width: 18px; height: 18px; }
@@ -392,7 +398,7 @@
         /* Vertical slide variant (Contact buttons) */
         .pill.vertical .pill-label { transform: translateY(0); }
         .pill.vertical:hover .pill-label,
-        .pill.vertical.open .pill-label { transform: translateY(-120%); }
+        .pill.vertical.open .pill-label { transform: translateY(-130%); }
 
         .pill-items {
             position: relative;
@@ -494,6 +500,14 @@
         .pill.vertical::after { left: 0; right: 0; width: 100%; height: 18px; }
         .pill.vertical::before { top: 0; background: linear-gradient(to bottom, var(--chip-bg), rgba(0,0,0,0)); }
         .pill.vertical::after  { bottom: 0; background: linear-gradient(to top,    var(--chip-bg), rgba(0,0,0,0)); }
+        /* Contact pills do not need the fades (prevents top line artifacts) */
+        .action-pills .pill::before,
+        .action-pills .pill::after { display: none; }
+
+        /* Dark mode tuning for pills */
+        body[data-theme="dark"] .pill:hover { background-color: #23232e; box-shadow: 0 10px 22px rgba(0,0,0,0.5); }
+        body[data-theme="dark"] .pill-label { background-color: var(--control-bg); color: var(--primary-color); }
+        body[data-theme="dark"] .pill .pill-items span { color: var(--primary-color); }
 
         /* Action pills grid in Contact */
         .action-pills {
@@ -691,6 +705,11 @@
         }
 
         @media (max-width: 768px) {
+            nav {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
             .mobile-menu-toggle {
                 display: flex;
             }
