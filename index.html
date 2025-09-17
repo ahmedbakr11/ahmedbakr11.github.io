@@ -60,8 +60,37 @@
 
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
+            .reveal-on-scroll {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
         }
 
+        /* Scroll reveal animations */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translate3d(0, var(--reveal-distance, 32px), 0);
+            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: var(--reveal-delay, 0s);
+            will-change: opacity, transform;
+        }
+        .reveal-on-scroll[data-reveal-direction="left"] {
+            transform: translate3d(calc(var(--reveal-distance, 32px) * -1), 0, 0);
+        }
+        .reveal-on-scroll[data-reveal-direction="right"] {
+            transform: translate3d(var(--reveal-distance, 32px), 0, 0);
+        }
+        .reveal-on-scroll[data-reveal-direction="scale"] {
+            transform: scale(0.96);
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+        .reveal-on-scroll[data-reveal-direction="scale"].is-visible {
+            transform: scale(1);
+        }
         /* Header */
         header {
             position: fixed;
@@ -262,6 +291,7 @@
             100% { border-radius: 58% 42% 52% 48% / 47% 53% 55% 45%; }
         }
 
+
         /* Sections */
         section {
             max-width: var(--max-width);
@@ -308,32 +338,351 @@
 
         /* Projects Section */
         #projects {
-            background: var(--bg-light);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
+            position: relative;
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: clamp(5rem, 9vw, 6.5rem) 2rem clamp(4.5rem, 9vw, 6.5rem);
             background: var(--surface);
-            border-radius: 10px;
-            padding: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            scroll-margin-top: calc(var(--header-height) + 10px);
         }
 
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        body[data-theme="dark"] #projects {
+            background: var(--surface-2);
         }
 
-        .project-card h3 {
-            margin-bottom: 1rem;
-            color: var(--primary-color);
+        .projects-heading {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 0rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
         }
+
+        .projects-heading h2 {
+            margin: 0;
+        }
+
+        .projects-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .pursuits-subtitle {
+            color: var(--text-light);
+            max-width: min(540px, 70vw);
+            font-size: 1.05rem;
+        }
+
+        .pursuits-nav {
+            display: flex;
+            align-items: center;
+            gap: clamp(1rem, 3vw, 2rem);
+            margin-top: clamp(1.5rem, 3vw, 2.5rem);
+        }
+
+        .pursuits-nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid var(--line-muted);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: inherit;
+            transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        .pursuits-nav-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .pursuits-nav-btn:hover:not(:disabled) {
+            background: var(--accent-light);
+            border-color: rgba(var(--accent-rgb), 0.45);
+            color: var(--accent);
+        }
+
+        .pursuits-nav-btn:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .pursuits-progress {
+            display: inline-flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex: 1;
+        }
+
+        .pursuits-dot {
+            width: clamp(26px, 5vw, 42px);
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(var(--accent-rgb), 0.18);
+            border: none;
+            padding: 0;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .pursuits-dot.is-active {
+            background: rgba(var(--accent-rgb), 0.8);
+            transform: scaleX(1.2);
+        }
+
+        .pursuits-canvas {
+            overflow: hidden;
+            margin-top: clamp(2.5rem, 5vw, 3.5rem);
+            max-width: var(--max-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 2rem;
+        }
+
+        .pursuits-frame {
+            display: flex;
+            gap: clamp(2rem, 5vw, 3.5rem);
+            will-change: transform;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .pursuit-item {
+            flex: 0 0 min(960px, calc(100vw - clamp(6rem, 12vw, 12rem)));
+            display: flex;
+        }
+
+        .pursuit-item-wrapper {
+            background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.08), rgba(var(--accent-rgb), 0.02));
+            border: 1px solid rgba(var(--accent-rgb), 0.08);
+            border-radius: 28px;
+            box-shadow: 0 30px 60px -35px rgba(var(--accent-rgb), 0.4);
+            padding: clamp(2.5rem, 6vw, 3.5rem);
+            display: flex;
+            width: 100%;
+        }
+
+        body[data-theme="dark"] .pursuit-item-wrapper {
+            background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.18), rgba(var(--accent-rgb), 0.05));
+            border-color: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 24px 60px -40px rgba(0, 0, 0, 0.8);
+        }
+
+        body[data-theme="dark"] .pursuit-item-icon {
+            background: rgba(var(--accent-rgb), 0.32);
+            color: #fff;
+        }
+
+        body[data-theme="dark"] .pursuit-item-tags span {
+            background: rgba(var(--accent-rgb), 0.28);
+        }
+
+        body[data-theme="dark"] .pursuit-link {
+            border-color: rgba(233, 233, 238, 0.22);
+        }
+
+        body[data-theme="dark"] .pursuit-link:hover {
+            color: rgba(var(--accent-rgb), 0.85);
+        }
+
+        .pursuit-item-content {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: clamp(2rem, 5vw, 3.5rem);
+            width: 100%;
+            align-items: stretch;
+        }
+
+        .pursuit-item-image {
+            position: relative;
+            border-radius: 22px;
+            overflow: hidden;
+            min-height: clamp(260px, 40vh, 360px);
+            background: radial-gradient(circle at top, rgba(var(--accent-rgb), 0.25), transparent 60%);
+            display: grid;
+            place-items: stretch;
+        }
+
+        .pursuit-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.02);
+        }
+
+        .pursuit-item-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(14, 12, 30, 0.55), transparent 45%);
+            mix-blend-mode: multiply;
+            pointer-events: none;
+        }
+
+        .pursuit-item-content-text-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+        }
+
+        .pursuit-item-meta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-light);
+        }
+
+        .pursuit-item-label {
+            font-weight: 600;
+            letter-spacing: 0.1em;
+        }
+
+        .pursuit-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(var(--accent-rgb), 0.12);
+            color: rgba(var(--accent-rgb), 0.8);
+        }
+
+        .pursuit-item-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .pursuit-item-content-header {
+            font-size: clamp(1.9rem, 4vw, 2.4rem);
+            margin: 0;
+        }
+
+        .pursuit-item-content-text {
+            margin: 0;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .pursuit-item-tags {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .pursuit-item-tags span {
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(var(--accent-rgb), 0.12);
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .pursuit-links {
+            margin-top: auto;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 0.85rem;
+        }
+
+        .pursuit-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.6rem 1.1rem;
+            border-radius: 999px;
+            border: 1px solid rgba(var(--accent-rgb), 0.35);
+            color: inherit;
+            font-weight: 600;
+            text-decoration: none;
+            transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+        }
+
+        .pursuit-link svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .pursuit-link:hover {
+            border-color: rgba(var(--accent-rgb), 0.55);
+            background: rgba(var(--accent-rgb), 0.12);
+            color: var(--accent);
+        }
+
+        .pursuit-link.is-secondary {
+            border-style: dashed;
+        }
+
+        @media (max-width: 1200px) {
+            .pursuit-item {
+                flex-basis: min(880px, calc(100vw - 8rem));
+            }
+        }
+
+        @media (max-width: 1000px) {
+            .pursuit-item-content {
+                grid-template-columns: 1fr;
+            }
+            .pursuit-item-image {
+                min-height: 280px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            #projects {
+                width: 100%;
+                margin-left: 0;
+                padding: 4rem 0;
+            }
+            .pursuits-canvas {
+                padding: 0 1.75rem;
+            }
+            .pursuits-frame {
+                gap: 1.5rem;
+            }
+            .pursuit-item {
+                flex: 0 0 100%;
+            }
+            .pursuit-item-wrapper {
+                padding: clamp(2rem, 8vw, 2.75rem);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .pursuits-nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+            .pursuits-nav-btn {
+                width: 40px;
+                height: 40px;
+            }
+            .pursuits-progress {
+                width: 100%;
+            }
+            .pursuits-dot {
+                flex: 1;
+                height: 3px;
+            }
+            .projects-heading h2 {
+                font-size: 2.4rem;
+            }
+        }
+
+        /* Experience Section */
+        #experience {
+            padding-top: clamp(3rem, 6vw, 4rem);
+        }
+
+        /* Skills Pills */
 
         /* Skills Pills (sample-like) */
         .skill-pills {
@@ -574,6 +923,10 @@
         }
 
         /* Experience Section */
+        #experience {
+            padding-top: clamp(3rem, 6vw, 4rem);
+        }
+
         .experience-timeline {
             position: relative;
             padding-left: 2rem;
@@ -799,6 +1152,9 @@
                 <p class="subtitle">
                     Hi, I'm <strong>Ahmed Bakr</strong>. A passionate Cybersecurity Engineer specialized in system security, threat detection and response. Based in Cairo, Egypt <img src="round-pushpin-svgrepo-com.svg" alt="location pin" class="emoji-icon pin" />
                 </p>
+                <p class="subtitle" style="font-size: 15px;">
+                    Not the first time here? Schedule a Meeting!
+                </p>
                 <div class="social-links">
                     <a href="https://www.linkedin.com/in/ahmed1bakr" target="_blank" title="LinkedIn">
                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
@@ -835,13 +1191,13 @@
         <div class="about-content">
             <div>
                 <p class="about-text">
-                    I’m a dedicated Cybersecurity Engineer with over a year of hands-on experience in hardening, protecting, and monitoring systems and data against evolving threats. My mission is simple: safeguarding sensitive information.
+                    I?m a dedicated Cybersecurity Engineer with over a year of hands-on experience in hardening, protecting, and monitoring systems and data against evolving threats. My mission is simple: safeguarding sensitive information.
                 </p>
                 <p class="about-text" style="margin-top: 1rem;">
-                    My journey began with my very first ‘incident’—hijacking my neighbor’s Wi-Fi 😅. That moment sparked my fascination with systems and cybersecurity, and I’ve never looked back.
+                    My journey began with my very first ?incident??hijacking my neighbor?s Wi-Fi ??. That moment sparked my fascination with systems and cybersecurity, and I?ve never looked back.
                 </p>
                 <p class="about-text" style="margin-top: 1rem;">
-                    I thrive in fast-paced environments, adapting quickly to new technologies and emerging threats. Whether it’s identifying vulnerabilities, implementing robust security measures, or responding to incidents, I bring a reliable, detail-oriented, and results-driven approach to every challenge.
+                    I thrive in fast-paced environments, adapting quickly to new technologies and emerging threats. Whether it?s identifying vulnerabilities, implementing robust security measures, or responding to incidents, I bring a reliable, detail-oriented, and results-driven approach to every challenge.
                 </p>
             </div>
             <div class="about-skills">
@@ -974,11 +1330,121 @@
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects">
-        <h2>Projects</h2>
-        <p class="section-subtitle">Some of my recent security projects and tools</p>
-        
+        <!-- Projects Section -->
+    <section id="projects" class="section-pursuits">
+        <div class="projects-heading">
+            <p class="about-text projects-label"></p>
+            <h2>Relevant Projects</h2>
+            <p class="pursuits-subtitle">Purpose-built experiments that sharpen my response playbooks and keep my engineering instincts curious.</p>
+            <div class="pursuits-nav">
+                <button class="pursuits-nav-btn is-prev" type="button" aria-label="Previous project" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M15 18l-6-6 6-6"/>
+                    </svg>
+                </button>
+                <div class="pursuits-progress" role="tablist" aria-label="Project slides">
+                    <button class="pursuits-dot is-active" type="button" role="tab" aria-selected="true" aria-label="MiniWAF"></button>
+                    <button class="pursuits-dot" type="button" role="tab" aria-selected="false" aria-label="Email phishing toolkit"></button>
+                    <button class="pursuits-dot" type="button" role="tab" aria-selected="false" aria-label="Incident replay sandbox"></button>
+                    <button class="pursuits-dot" type="button" role="tab" aria-selected="false" aria-label="Portfolio platform"></button>
+                </div>
+                <button class="pursuits-nav-btn is-next" type="button" aria-label="Next project">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M9 6l6 6-6 6"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="pursuits-canvas">
+            <div class="pursuits-frame">
+                <article class="pursuit-item" role="group" aria-roledescription="slide" aria-label="MiniWAF web application firewall">
+                    <div class="pursuit-item-wrapper">
+                        <div class="pursuit-item-content">
+                            <div class="pursuit-item-image">
+                                <div class="pursuit-item-image-overlay"></div>
+                                <img src="Assets/MINIWAFSNAPSHOTS-MadewithClipchamp-ezgif.com-optimize.gif" alt="Threat dashboard open on workstation">
+                            </div>
+                            <div class="pursuit-item-content-text-wrapper">
+                                <div class="pursuit-item-meta">
+                                    <span class="pursuit-item-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 2l7 4v6c0 5-3.5 9-7 10-3.5-1-7-5-7-10V6l7-4z"/>
+                                        </svg>
+                                    </span>
+                                    <span class="pursuit-item-label">WEB Security - 2025</span>
+                                </div>
+                                <h3 class="pursuit-item-content-header">MiniWAF</h3>
+                                <p class="pursuit-item-content-text">A lightweight web application firewall that acts as a Reverse Proxy inspecting inbound traffic, neutralising malicious payloads, and Block unwanted traffic.</p>
+                                <div class="pursuit-item-tags">
+                                    <span>FastAPI</span>
+                                    <span>Reverse Proxy</span>
+                                    <span>HTTPsec</span>
+                                </div>
+                                <div class="pursuit-links">
+                                    <a class="pursuit-link" href="https://github.com/ahmedbakr11/MiniWAF" target="_blank" rel="noopener">
+                                        <span>GitHub</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 12h14"/>
+                                            <path d="M12 5l7 7-7 7"/>
+                                        </svg>
+                                    </a>
+                                    <a class="pursuit-link is-secondary" href="https://drive.google.com/file/d/1MEIkIWQtOkznkz1RMni7cN5fbWGTLaYo/view?usp=drive_link" target="_blank" rel="noopener">
+                                        <span>Demo</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="pursuit-item" role="group" aria-roledescription="slide" aria-label="Email phishing detection toolkit">
+                    <div class="pursuit-item-wrapper">
+                        <div class="pursuit-item-content">
+                            <div class="pursuit-item-image">
+                                <div class="pursuit-item-image-overlay"></div>
+                                <img src="/Assets/Herrenshirt-In-progress-schwarz-Print.png" alt="Laptop showing email analysis results">
+                            </div>
+                            <div class="pursuit-item-content-text-wrapper">
+                                <div class="pursuit-item-meta">
+                                    <span class="pursuit-item-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M3 5h18v14H3z"/>
+                                            <polyline points="3,7 12,13 21,7"/>
+                                        </svg>
+                                    </span>
+                                    <span class="pursuit-item-label">Threat Detection - 2024</span>
+                                </div>
+                                <h3 class="pursuit-item-content-header">Phishing Analysis Toolkit</h3>
+                                <p class="pursuit-item-content-text">Automates enrichment of suspicious emails, correlates indicators with OSINT feeds, and builds analyst-ready reports for the SOC queue.</p>
+                                <div class="pursuit-item-tags">
+                                    <span>Python</span>
+                                    <span>MITRE ATT&amp;CK</span>
+                                    <span>YARA</span>
+                                </div>
+                                <div class="pursuit-links">
+                                    <a class="pursuit-link" href="https://github.com/ahmedbakr11/Email-Phishing-Analysis-and-Detection-" target="_blank" rel="noopener">
+                                        <span>GitHub</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M5 12h14"/>
+                                            <path d="M12 5l7 7-7 7"/>
+                                        </svg>
+                                    </a>
+                                    <a class="pursuit-link is-secondary" href="https://youtu.be/placeholder-phishing" target="_blank" rel="noopener">
+                                        <span>Demo</span>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                
+            </div>
+        </div>
     </section>
 
     <!-- Experience Section -->
@@ -1093,7 +1559,234 @@
             </div>
         </div>
     </section>
+    <script>
+    // Projects slider controls
+    (function () {
+      const section = document.getElementById('projects');
+      if (!section) return;
+      const frame = section.querySelector('.pursuits-frame');
+      const slides = Array.from(section.querySelectorAll('.pursuit-item'));
+      const prevBtn = section.querySelector('.pursuits-nav-btn.is-prev');
+      const nextBtn = section.querySelector('.pursuits-nav-btn.is-next');
+      const dots = Array.from(section.querySelectorAll('.pursuits-dot'));
+      const canvas = section.querySelector('.pursuits-canvas');
+      if (!frame || !slides.length || !canvas) return;
 
+      let index = 0;
+
+      function clampIndex(value) {
+        return Math.min(Math.max(value, 0), Math.max(0, slides.length - 1));
+      }
+
+      function update(animate = true) {
+        if (!slides.length) return;
+        const target = slides[index];
+        const canvasWidth = canvas.clientWidth;
+        const frameWidth = frame.scrollWidth;
+        const slideWidth = target.offsetWidth;
+        const desired = target.offsetLeft + slideWidth / 2 - canvasWidth / 2;
+        const maxTranslate = Math.max(0, frameWidth - canvasWidth);
+        const translate = Math.min(Math.max(desired, 0), maxTranslate);
+        if (!animate) frame.style.transition = 'none';
+        requestAnimationFrame(() => {
+          frame.style.transform = `translate3d(${-translate}px, 0, 0)`;
+          if (!animate) {
+            requestAnimationFrame(() => {
+              frame.style.transition = '';
+            });
+          }
+        });
+        if (prevBtn) prevBtn.disabled = index === 0;
+        if (nextBtn) nextBtn.disabled = index === slides.length - 1;
+        dots.forEach((dot, dotIndex) => {
+          const isActive = dotIndex === index;
+          dot.classList.toggle('is-active', isActive);
+          dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+      }
+
+      function goTo(newIndex) {
+        const clamped = clampIndex(newIndex);
+        if (clamped === index) return;
+        index = clamped;
+        update();
+      }
+
+      function recalc() {
+        update(false);
+      }
+
+      prevBtn?.addEventListener('click', () => goTo(index - 1));
+      nextBtn?.addEventListener('click', () => goTo(index + 1));
+      dots.forEach((dot, dotIndex) => {
+        dot.addEventListener('click', () => goTo(dotIndex));
+      });
+
+      let wheelLocked = false;
+      function releaseWheelLock() {
+        wheelLocked = false;
+      }
+
+      canvas.addEventListener('wheel', (event) => {
+        if (slides.length <= 1) return;
+        const dominantDelta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+        if (Math.abs(dominantDelta) < 24 || wheelLocked) return;
+        event.preventDefault();
+        wheelLocked = true;
+        if (dominantDelta > 0) {
+          goTo(index + 1);
+        } else {
+          goTo(index - 1);
+        }
+        setTimeout(releaseWheelLock, 420);
+      }, { passive: false });
+
+      let touchStartX = 0;
+      let touchActive = false;
+
+      canvas.addEventListener('touchstart', (event) => {
+        if (!event.touches || event.touches.length !== 1) return;
+        touchActive = true;
+        touchStartX = event.touches[0].clientX;
+      }, { passive: true });
+
+      canvas.addEventListener('touchmove', (event) => {
+        if (!touchActive) return;
+        const deltaX = event.touches[0].clientX - touchStartX;
+        if (Math.abs(deltaX) > 45) {
+          goTo(deltaX > 0 ? index - 1 : index + 1);
+          touchActive = false;
+        }
+      }, { passive: true });
+
+      canvas.addEventListener('touchend', () => {
+        touchActive = false;
+      });
+
+      window.addEventListener('resize', () => {
+        recalc();
+      });
+
+      recalc();
+    })();
+    </script>
+
+    <script>
+    // Scroll reveal animation setup
+    (function () {
+      function init() {
+        const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const supportsObserver = "IntersectionObserver" in window;
+        const allowedTags = new Set(["SECTION","DIV","P","H1","H2","H3","H4","H5","H6","UL","OL","LI","A","BUTTON","IMG","NAV","HEADER","FOOTER","ASIDE","ARTICLE","FIGURE"]);
+        const targets = [];
+        const seen = new Set();
+
+        document.querySelectorAll("body *").forEach((el) => {
+          const tag = el.tagName;
+          if (seen.has(el)) return;
+          if (!allowedTags.has(tag)) return;
+          if (el.closest("svg")) return;
+          if (el.hasAttribute("data-reveal-ignore")) return;
+          targets.push(el);
+          seen.add(el);
+        });
+
+        if (!supportsObserver || reduceMotion) {
+          targets.forEach((el) => {
+            el.classList.add("reveal-on-scroll", "is-visible");
+          });
+          return;
+        }
+
+        const baseStagger = window.innerWidth < 768 ? 70 : 90;
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.18, rootMargin: "0px 0px -80px 0px" });
+
+        const groupCounters = new Map();
+
+        targets.forEach((el) => {
+          el.classList.add("reveal-on-scroll");
+
+          const group = resolveGroup(el);
+          let info = groupCounters.get(group);
+          if (!info) {
+            info = { index: 0 };
+            groupCounters.set(group, info);
+          }
+
+          const groupClassList = group && group.classList ? group.classList : null;
+          const isHero = groupClassList && (groupClassList.contains("hero") || groupClassList.contains("hero-container"));
+          const isHeader = group && group.tagName === "HEADER";
+          const isExperienceItem = groupClassList && groupClassList.contains("experience-item");
+          const isPillCluster = groupClassList && (groupClassList.contains("action-pills") || groupClassList.contains("skill-pills"));
+          const startDelay = isHero ? 160 : (isHeader ? 40 : 0);
+          const stagger = isHeader ? 50 : (isExperienceItem ? 55 : (isPillCluster ? 45 : baseStagger));
+          const delay = Math.min(startDelay + info.index * stagger, 700);
+          if (!el.style.getPropertyValue("--reveal-delay")) {
+            el.style.setProperty("--reveal-delay", `${delay}ms`);
+          }
+          info.index += 1;
+
+          const direction = chooseDirection(el);
+          if (direction && direction !== "up" && !el.dataset.revealDirection) {
+            el.dataset.revealDirection = direction;
+          }
+
+          const distance = chooseDistance(el);
+          if (distance && !el.style.getPropertyValue("--reveal-distance")) {
+            el.style.setProperty("--reveal-distance", distance);
+          }
+
+          observer.observe(el);
+        });
+
+        function resolveGroup(el) {
+          return el.closest(".experience-item, .hero-container, .about-content, .skill-pills, .action-pills, section, header, footer") || document.body;
+        }
+
+        function chooseDirection(el) {
+          if (el.matches(".hero-content, .hero-content > *, header .logo, header .nav-links, header .nav-links li")) {
+            return "left";
+          }
+          if (el.matches(".hero-image, .hero-image *")) {
+            return "right";
+          }
+          const experienceItem = el.closest(".experience-item");
+          if (experienceItem) {
+            const siblings = Array.from(experienceItem.parentElement ? experienceItem.parentElement.children : []);
+            const pos = siblings.indexOf(experienceItem);
+            if (pos > -1) {
+              return pos % 2 === 0 ? "left" : "right";
+            }
+          }
+          if (el.matches(".skill-pills .pill:nth-child(even), .action-pills > *:nth-child(even)")) {
+            return "right";
+          }
+          return "up";
+        }
+
+        function chooseDistance(el) {
+          if (el.matches(".hero-image, .hero-image img")) return "64px";
+          if (el.matches("h1, h2, h3")) return "40px";
+          if (el.matches(".experience-item li, .skill-pills .pill, .action-pills > *")) return "24px";
+          if (el.matches(".social-links a")) return "18px";
+          return null;
+        }
+      }
+
+      if (document.readyState !== "loading") {
+        init();
+      } else {
+        document.addEventListener("DOMContentLoaded", init);
+      }
+    })();
+    </script>
     <script>
         // Mobile menu toggle
         function toggleMenu() {
@@ -1219,11 +1912,4 @@
 
     </body>
     </html>
-
-
-
-
-
-
-
 
