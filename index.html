@@ -165,6 +165,269 @@
             color: var(--accent);
         }
 
+/* Intro Landing Section */
+.intro-landing {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: calc(var(--header-height) + clamp(2.5rem, 8vw, 5rem)) 0 clamp(3rem, 8vw, 6rem);
+    background: var(--surface);
+    color: var(--primary-color);
+    overflow: hidden;
+    width: 100%;
+}
+
+.intro-landing::before {
+    content: "";
+    position: absolute;
+    top: 12%;
+    left: -10%;
+    width: clamp(260px, 38vw, 520px);
+    height: clamp(260px, 38vw, 520px);
+    background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.18) 0%, rgba(var(--accent-rgb), 0.06) 55%, transparent 85%);
+    filter: blur(0px);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.intro-landing::after {
+    content: "";
+    position: absolute;
+    bottom: -20%;
+    right: -15%;
+    width: clamp(220px, 32vw, 420px);
+    height: clamp(220px, 32vw, 420px);
+    background: radial-gradient(circle at center, rgba(var(--accent-rgb), 0.15) 0%, rgba(var(--accent-rgb), 0.04) 50%, transparent 80%);
+    pointer-events: none;
+}
+
+.intro-landing__background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 clamp(1.5rem, 10vw, 9rem);
+    gap: clamp(2rem, 10vw, 8rem);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.intro-landing__line {
+    position: relative;
+    align-self: stretch;
+    width: 2px;
+    background: linear-gradient(to top, rgba(var(--accent-rgb), 0), rgba(var(--accent-rgb), 0.35), rgba(var(--accent-rgb), 0));
+    overflow: hidden;
+}
+
+.intro-landing__line::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -40%;
+    width: 140%;
+    height: 45%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, rgba(var(--accent-rgb), 0) 0%, rgba(var(--accent-rgb), 0.9) 50%, rgba(var(--accent-rgb), 0) 100%);
+    filter: blur(0.5px);
+    animation: intro-line-scroll 5.2s ease-in-out infinite;
+    animation-delay: calc(var(--line-index, 0) * -0.9s);
+}
+
+.intro-landing__line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, transparent 0%, rgba(var(--accent-rgb), 0.12) 50%, transparent 100%);
+    mix-blend-mode: screen;
+}
+
+@keyframes intro-line-scroll {
+    0% {
+        transform: translate(-50%, -120%);
+    }
+    50% {
+        transform: translate(-50%, 120%);
+    }
+    100% {
+        transform: translate(-50%, -120%);
+    }
+}
+
+.intro-landing__content {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: clamp(1.2rem, 3vw, 2.7rem);
+    max-width: min(720px, 90vw);
+    text-align: center;
+    margin: 0 auto;
+    padding: 0 clamp(1.5rem, 6vw, 4rem);
+}
+
+.intro-landing__eyebrow {
+    font-size: 0.85rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    justify-self: center;
+}
+
+.intro-landing__headline {
+    font-size: clamp(3.2rem, 10vw, 6.4rem);
+    font-weight: 700;
+    letter-spacing: clamp(-0.5px, -0.12vw, -1.5px);
+    line-height: 1;
+}
+
+.intro-landing__name {
+    display: inline-block;
+    color: var(--primary-color);
+    text-shadow: 0 18px 45px rgba(var(--accent-rgb), 0.14);
+}
+
+body[data-theme="dark"] .intro-landing__name {
+    color: var(--primary-color);
+    text-shadow: 0 18px 40px rgba(0, 0, 0, 0.48);
+}
+
+.intro-landing__name.is-scrambling {
+    color: var(--accent);
+    text-shadow: 0 18px 38px rgba(var(--accent-rgb), 0.36);
+}
+
+body[data-theme="dark"] .intro-landing__name.is-scrambling {
+    color: var(--accent);
+    text-shadow: 0 18px 42px rgba(0, 0, 0, 0.52);
+}
+
+.intro-landing__subtitle {
+    font-size: clamp(1rem, 2.4vw, 1.2rem);
+    color: var(--text-light);
+    max-width: 38ch;
+    justify-self: center;
+}
+
+.intro-landing__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.2rem, 4vw, 2.5rem);
+    flex-wrap: wrap;
+}
+
+.intro-landing__button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.95rem 3.2rem;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+}
+
+.intro-landing__button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.35) 55%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.intro-landing__button:hover,
+.intro-landing__button:focus-visible {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(var(--accent-rgb), 0.28);
+    background: rgba(var(--accent-rgb), 0.92);
+}
+
+.intro-landing__button:hover::after,
+.intro-landing__button:focus-visible::after {
+    transform: translateX(100%);
+}
+
+.intro-landing__scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--text-light);
+    text-decoration: none;
+}
+
+.intro-landing__scroll-icon {
+    width: 18px;
+    height: 24px;
+    animation: intro-scroll-bounce 2.8s ease-in-out infinite;
+}
+
+@keyframes intro-scroll-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(8px);
+    }
+}
+
+@media (max-width: 768px) {
+    .intro-landing {
+        padding: calc(var(--header-height) + 2.5rem) 0 3rem;
+    }
+    .intro-landing__background {
+        padding: 0 clamp(1rem, 8vw, 2.5rem);
+        opacity: 0.4;
+    }
+    .intro-landing__content {
+        padding: 0 clamp(1.25rem, 8vw, 3rem);
+    }
+    .intro-landing__headline {
+        font-size: clamp(2.6rem, 13vw, 4.2rem);
+    }
+    .intro-landing__button {
+        padding: 0.9rem 2.6rem;
+        letter-spacing: 0.24em;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .intro-landing__line::before,
+    .intro-landing__scroll-icon {
+        animation: none;
+    }
+    .intro-landing__button {
+        transition: none;
+    }
+    .intro-landing__button::after {
+        display: none;
+    }
+}
+
+body[data-theme="dark"] .intro-landing {
+    background: var(--surface);
+}
+
+body[data-theme="dark"] .intro-landing__background {
+    opacity: 0.35;
+}
+
         /* Hero Section */
         .hero {
             margin-top: var(--header-height);
@@ -293,7 +556,7 @@
 
 
         /* Sections */
-        section {
+        section:not(.intro-landing) {
             max-width: var(--max-width);
             margin: 0 auto;
             padding: 5rem 2rem;
@@ -1106,7 +1369,7 @@
                 gap: 1.5rem;
             }
 
-            section {
+            section:not(.intro-landing) {
                 padding: 3rem 1.5rem;
             }
 
@@ -1145,7 +1408,35 @@
     </header>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    
+<section class="intro-landing" aria-labelledby="introLandingHeading">
+    <div class="intro-landing__background" aria-hidden="true">
+        <span class="intro-landing__line" style="--line-index: 0;"></span>
+        <span class="intro-landing__line" style="--line-index: 1;"></span>
+        <span class="intro-landing__line" style="--line-index: 2;"></span>
+        <span class="intro-landing__line" style="--line-index: 3;"></span>
+        <span class="intro-landing__line" style="--line-index: 4;"></span>
+        <span class="intro-landing__line" style="--line-index: 5;"></span>
+    </div>
+    <div class="intro-landing__content">
+        <p class="intro-landing__eyebrow">Cybersecurity Engineer &amp; Webflow Developer</p>
+        <h1 class="intro-landing__headline" id="introLandingHeading">
+            <span class="intro-landing__name" data-scramble="Abuzaid">Abuzaid</span>
+        </h1>
+        <p class="intro-landing__subtitle">Securing digital experiences while crafting purposeful, human-centered interfaces.</p>
+        <div class="intro-landing__actions">
+            <a class="intro-landing__button" href="#home">Explore</a>
+            <a class="intro-landing__scroll" href="#home">
+                <span>Scroll</span>
+                <svg aria-hidden="true" viewBox="0 0 12 20" class="intro-landing__scroll-icon">
+                    <path d="M6 0v14.5M1.5 10.5 6 15l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
                 <h1>Cybersecurity Engineer <img src="waving-hand-skin-2-svgrepo-com.svg" alt="waving hand" class="emoji-icon" /></h1>
@@ -1194,7 +1485,7 @@
                     I'm a dedicated Cybersecurity Engineer with over a year of hands-on experience in hardening, protecting, and monitoring systems and data against evolving threats. My mission is simple: safeguarding sensitive information.
                 </p>
                 <p class="about-text" style="margin-top: 1rem;">
-                    My journey began with my very first incident - hijacking my neighbor's Wi-Fi 😅. That moment sparked my fascination with systems and cybersecurity, and I've never looked back.
+                    My journey began with my very first incident - hijacking my neighbor's Wi-Fi ??. That moment sparked my fascination with systems and cybersecurity, and I've never looked back.
                 </p>
                 <p class="about-text" style="margin-top: 1rem;">
                     I thrive in fast-paced environments, adapting quickly to new technologies and emerging threats. Whether it's identifying vulnerabilities, implementing robust security measures, or responding to incidents, I bring a reliable, detail-oriented, and results-driven approach to every challenge.
@@ -1785,6 +2076,64 @@
       }
     })();
     </script>
+<script>
+(function(){
+  const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@&%$*+!?/=<>";
+  const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function runScramble(el){
+    const target = (el.getAttribute("data-scramble") || el.textContent || "").trim();
+    if(!target) return;
+    if(prefersReduced){
+      el.textContent = target;
+      el.classList.remove('is-scrambling');
+      return;
+    }
+    const delayAttr = parseInt(el.getAttribute("data-scramble-delay") || "220", 10);
+    const loopAttr = parseInt(el.getAttribute("data-scramble-loop") || "2800", 10);
+    const startDelay = Number.isFinite(delayAttr) ? Math.max(0, delayAttr) : 220;
+    const loopDelay = Number.isFinite(loopAttr) ? Math.max(600, loopAttr) : 2800;
+
+    function animate(){
+      const totalFrames = Math.max(30, target.length * 8);
+      const revealMap = Array.from(target, (_, index) => Math.floor(totalFrames * (index / target.length)) + index * 2);
+      let frame = 0;
+      el.classList.add('is-scrambling');
+      function step(){
+        let complete = true;
+        let output = "";
+        for(let i = 0; i < target.length; i++){
+          if(frame >= revealMap[i]){
+            output += target[i];
+          } else {
+            complete = false;
+            output += glyphs[Math.floor(Math.random() * glyphs.length)];
+          }
+        }
+        el.textContent = output;
+        frame += 1;
+        if(!complete){
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = target;
+          el.classList.remove('is-scrambling');
+          setTimeout(animate, loopDelay);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    setTimeout(animate, startDelay);
+  }
+  function init(){
+    document.querySelectorAll("[data-scramble]").forEach(runScramble);
+  }
+  if(document.readyState !== "loading"){
+    init();
+  } else {
+    document.addEventListener("DOMContentLoaded", init);
+  }
+})();
+</script>
     <script>
         // Mobile menu toggle
         function toggleMenu() {
