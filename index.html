@@ -1421,7 +1421,7 @@ body[data-theme="dark"] .intro-landing__background {
     <div class="intro-landing__content">
         <p class="intro-landing__eyebrow">Cybersecurity Engineer &amp; Webflow Developer</p>
         <h1 class="intro-landing__headline" id="introLandingHeading">
-            <span class="intro-landing__name" data-scramble="Abuzaid">Abuzaid</span>
+            <span class="intro-landing__name scramble-text">Ahmed</span>
         </h1>
         <p class="intro-landing__subtitle">Securing digital experiences while crafting purposeful, human-centered interfaces.</p>
         <div class="intro-landing__actions">
@@ -2077,62 +2077,80 @@ body[data-theme="dark"] .intro-landing__background {
     })();
     </script>
 <script>
-(function(){
-  const glyphs = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@&%$*+!?/=<>";
-  const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  function runScramble(el){
-    const target = (el.getAttribute("data-scramble") || el.textContent || "").trim();
-    if(!target) return;
-    if(prefersReduced){
-      el.textContent = target;
-      el.classList.remove('is-scrambling');
-      return;
+class TextScramble {
+  constructor(el) {
+    this.el = el
+    this.chars = '!<>-_\\/[]{}-=+*^?#________'
+    this.update = this.update.bind(this)
+  }
+  setText(newText) {
+    const oldText = this.el.innerText
+    const length = Math.max(oldText.length, newText.length)
+    const promise = new Promise((resolve) => this.resolve = resolve)
+    this.queue = []
+    for (let i = 0; i < length; i++) {
+      const from = oldText[i] || ''
+      const to = newText[i] || ''
+      const start = Math.floor(Math.random() * 40)
+      const end = start + Math.floor(Math.random() * 40)
+      this.queue.push({ from, to, start, end })
     }
-    const delayAttr = parseInt(el.getAttribute("data-scramble-delay") || "220", 10);
-    const loopAttr = parseInt(el.getAttribute("data-scramble-loop") || "2800", 10);
-    const startDelay = Number.isFinite(delayAttr) ? Math.max(0, delayAttr) : 220;
-    const loopDelay = Number.isFinite(loopAttr) ? Math.max(600, loopAttr) : 2800;
-
-    function animate(){
-      const totalFrames = Math.max(30, target.length * 8);
-      const revealMap = Array.from(target, (_, index) => Math.floor(totalFrames * (index / target.length)) + index * 2);
-      let frame = 0;
-      el.classList.add('is-scrambling');
-      function step(){
-        let complete = true;
-        let output = "";
-        for(let i = 0; i < target.length; i++){
-          if(frame >= revealMap[i]){
-            output += target[i];
-          } else {
-            complete = false;
-            output += glyphs[Math.floor(Math.random() * glyphs.length)];
-          }
+    cancelAnimationFrame(this.frameRequest)
+    this.frame = 0
+    this.update()
+    return promise
+  }
+  update() {
+    let output = ''
+    let complete = 0
+    const isPrimaryName = this.queue.some(({ to }) => to === 'Ahmed')
+    for (let i = 0, n = this.queue.length; i < n; i++) {
+      let { from, to, start, end, char } = this.queue[i]
+      if (this.frame >= end) {
+        complete++
+        output += to
+      } else if (this.frame >= start) {
+        if (!char || Math.random() < 0.28) {
+          char = this.randomChar()
+          this.queue[i].char = char
         }
-        el.textContent = output;
-        frame += 1;
-        if(!complete){
-          requestAnimationFrame(step);
-        } else {
-          el.textContent = target;
-          el.classList.remove('is-scrambling');
-          setTimeout(animate, loopDelay);
-        }
+        output += `<span style="color: #2e0b5f;">${char}</span>`
+      } else {
+        output += from
       }
-      requestAnimationFrame(step);
     }
+    this.el.innerHTML = output
+    if (complete === this.queue.length) {
+      this.resolve()
+    } else {
+      this.frameRequest = requestAnimationFrame(this.update)
+      this.frame++
+    }
+  }
+  randomChar() {
+    return this.chars[Math.floor(Math.random() * this.chars.length)]
+  }
+}
 
-    setTimeout(animate, startDelay);
+const phrases = [
+  'Ahmed',
+  'Bakr'
+]
+
+const el = document.querySelector('.scramble-text')
+if (el) {
+  const fx = new TextScramble(el)
+
+  let counter = 0
+  const next = () => {
+    fx.setText(phrases[counter]).then(() => {
+      setTimeout(next, 800)
+    })
+    counter = (counter + 1) % phrases.length
   }
-  function init(){
-    document.querySelectorAll("[data-scramble]").forEach(runScramble);
-  }
-  if(document.readyState !== "loading"){
-    init();
-  } else {
-    document.addEventListener("DOMContentLoaded", init);
-  }
-})();
+
+  next()
+}
 </script>
     <script>
         // Mobile menu toggle
@@ -2259,4 +2277,7 @@ body[data-theme="dark"] .intro-landing__background {
 
     </body>
     </html>
+
+
+
 
